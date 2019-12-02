@@ -1,0 +1,2 @@
+Initailize file to github remote repozitory from local one.
+~FB
