@@ -9,6 +9,7 @@
 using namespace std;
 
 // Function displaying only registers with 16 x uInt8. And message.
+// Use with cpp code.
 void printRegister(__m128i registerToprint, const string &msg) {
 	unsigned char tab_debug[16] = { 0 };
 	unsigned char *dest = tab_debug;
@@ -24,14 +25,17 @@ void printRegister(__m128i registerToprint, const string &msg) {
 	cout << "/\/\/\/\ HI /\/\/\/" << endl;
 }
 
-int main()
-{
-	// Example array as 128-bit register with 16xuInt8. That represent each channel of pixel in BGRA configuration.
-	unsigned char tab[] = { 100,200,250,255, 101,201,251,255, 102,202,252,255, 103,203,253,255 };
+// Function displaying only registers with 16 x uInt8. And message.
+// Use with asm code.
+void printRegister(unsigned char * src) {
 
-	// A pointer to source tab for simulate dll parameters reference.
-	unsigned char *src = tab;
+	for (int i = 0; i < 16; i++) {
+		cout << dec << (unsigned int)src[i] << endl;
+	}
+}
 
+// CPP function using SIMD programing model.
+void CppSIMDFunction(unsigned char *src) {
 	// Start index of src t
 	int srcIndex = 0;
 
@@ -77,6 +81,23 @@ int main()
 
 	__m128i grayMsk = _mm_setr_epi8(0, 0, 0, 0, 2, 2, 2, 2, 4, 4, 4, 4, 6, 6, 6, 6);
 	__m128i vectGray = _mm_shuffle_epi8(BGR_gray, grayMsk);
-	
+
 	printRegister(vectGray, "Gray");
+}
+
+// Functions from .asm file.
+extern "C" int testFunctionASM(unsigned char *);
+
+int main()
+{
+	// Example array as 128-bit register with 16xuInt8. That represent each channel of pixel in BGRA configuration.
+	unsigned char tab[] = { 100,200,250,255, 101,201,251,255, 102,202,252,255, 103,203,253,255 };
+
+	// A pointer to source tab for simulate dll parameters reference.
+	unsigned char *src = tab;
+
+	//CppSIMDFunction(src);
+
+	testFunctionASM(src);
+	printRegister(src);
 }

@@ -27,4 +27,9 @@
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <MASM Include="asm.asm">
+      <Filter>Pliki źródłowe</Filter>
+    </MASM>
+  </ItemGroup>
 </Project>
