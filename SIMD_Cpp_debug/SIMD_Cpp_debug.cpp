@@ -40,9 +40,10 @@ void CppSIMDFunction(unsigned char *src) {
 	int srcIndex = 0;
 
 	// How to define float numbers as integer of uInt16 type.
-	const __m128i r_coef = _mm_set1_epi16((short)(0.2989*32768.0 + 0.5));
-	const __m128i g_coef = _mm_set1_epi16((short)(0.5870*32768.0 + 0.5));
-	const __m128i b_coef = _mm_set1_epi16((short)(0.1140*32768.0 + 0.5));
+	// Its const variable of short type.
+	const __m128i rFactor = _mm_set1_epi16((short)(0.2989*32768.0 + 0.5));
+	const __m128i gFactor = _mm_set1_epi16((short)(0.5870*32768.0 + 0.5));
+	const __m128i bFactor = _mm_set1_epi16((short)(0.1140*32768.0 + 0.5));
 
 	// vecSrc - source vector (BGRA BGRA BGRA BGRA).
 	// Load data from tab[] into 128-bit register starting from adress at pointer src. (From 0 index so load all 16 elements x 8bit).
@@ -73,9 +74,9 @@ void CppSIMDFunction(unsigned char *src) {
 	__m128i R0RRR = _mm_cvtepu8_epi16(XXX_R0);
 
 	// Multiply epi16 registers.
-	__m128i B0BBB_mul = _mm_mulhrs_epi16(B0BBB, b_coef);
-	__m128i G0GGG_mul = _mm_mulhrs_epi16(G0GGG, g_coef);
-	__m128i R0RRR_mul = _mm_mulhrs_epi16(R0RRR, r_coef);
+	__m128i B0BBB_mul = _mm_mulhrs_epi16(B0BBB, bFactor);
+	__m128i G0GGG_mul = _mm_mulhrs_epi16(G0GGG, gFactor);
+	__m128i R0RRR_mul = _mm_mulhrs_epi16(R0RRR, rFactor);
 
 	__m128i BGR_gray = _mm_add_epi16(_mm_add_epi16(B0BBB_mul, G0GGG_mul), R0RRR_mul);
 
