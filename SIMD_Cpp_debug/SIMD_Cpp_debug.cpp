@@ -88,6 +88,7 @@ void CppSIMDFunction(unsigned char *src) {
 
 // Functions from .asm file.
 extern "C" int testFunctionASM(unsigned char *);
+extern "C" int reciveCharPiotrek(unsigned char *, char);
 
 int main()
 {
@@ -99,6 +100,7 @@ int main()
 
 	//CppSIMDFunction(src);
 
-	testFunctionASM(src);
+	//testFunctionASM(src);
+	reciveCharPiotrek(src, 157);
 	printRegister(src);
 }

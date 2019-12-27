@@ -82,4 +82,21 @@ movdqu [RCX], xmm0
 
                 ret
 testFunctionASM ENDP
+
+reciveCharPiotrek PROC
+
+; Load input pointer to array to a register as values.
+movdqu xmm1, [RCX]
+movq xmm2, RDX
+
+; Shifting to get only single char value at LO and get register in format XXX_VALUE
+pslldq xmm2, 15
+psrldq xmm2, 15
+
+
+; Returning changed register at recived pointer adress.
+movdqu [RCX], xmm2
+
+ret
+reciveCharPiotrek ENDP
 END
