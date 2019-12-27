@@ -2,6 +2,10 @@
 ; Vector that contains 16x8-bit const numbers.
 shuffleMask db 15, 11, 7, 3, 14, 10, 6, 2, 13, 9, 5, 1, 12, 8, 4, 0
 shufflePackMask db 6, 6, 6, 6, 4, 4, 4, 4, 2, 2, 2, 2, 0, 0, 0, 0
+shuffleRGBMask db 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0, 1, 2, 0
+
+; Vector initialize.
+zeroRegister db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
 ; Constans for channels multiplication.
 rFactor dw 9794, 9794, 9794, 9794, 9794, 9794, 9794, 9794
@@ -87,15 +91,38 @@ reciveCharPiotrek PROC
 
 ; Load input pointer to array to a register as values.
 movdqu xmm1, [RCX]
+
+; Load 1-st value, 2-nd value, 3-rd value (char type).
 movq xmm2, RDX
+movq xmm3, R8
+movq xmm4, R9
 
 ; Shifting to get only single char value at LO and get register in format XXX_VALUE
 pslldq xmm2, 15
 psrldq xmm2, 15
 
+; Shifting to get only single char value at LO and get register in format XXX_VALUE
+pslldq xmm3, 15
+psrldq xmm3, 14
+
+; Shifting to get only single char value at LO and get register in format XXX_VALUE
+pslldq xmm4, 15
+psrldq xmm4, 13
+
+; Load variable from reserved memory data to 128-bit register.
+movdqa xmm0, XMMWORD PTR [zeroRegister]
+
+; Adding all registers.
+paddw xmm0, xmm2
+paddw xmm0, xmm3
+paddw xmm0, xmm4
+
+; Shuffle to get RGB...
+movdqa xmm8, XMMWORD PTR [shuffleRGBMask]
+pshufb xmm0, xmm8
 
 ; Returning changed register at recived pointer adress.
-movdqu [RCX], xmm2
+movdqu [RCX], xmm0
 
 ret
 reciveCharPiotrek ENDP
